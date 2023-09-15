@@ -1,9 +1,9 @@
 ---
-title: "КР1 // NHST"
+title: "КР3 // Обобщенные линейные модели"
 subtitle: "Современные методы анализа данных // РАНХиГС"
 format: html
 editor: source
-theme: flatly
+theme: materia
 ---
 
 20 баллов

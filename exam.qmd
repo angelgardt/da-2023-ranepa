@@ -1,9 +1,9 @@
 ---
-title: "КР1 // NHST"
+title: "Экзамен"
 subtitle: "Современные методы анализа данных // РАНХиГС"
 format: html
 editor: source
-theme: flatly
+theme: materia
 ---
 
 40 баллов
