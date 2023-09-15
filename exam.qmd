@@ -1,0 +1,39 @@
+---
+title: "КР1 // NHST"
+subtitle: "Современные методы анализа данных // РАНХиГС"
+format: html
+editor: source
+theme: flatly
+---
+
+40 баллов
+
+Вам предложены данные и поставлен исследовательский вопрос. Ответьте на исследовательский вопрос, используя статистический анализ.
+Выберите статистическую модель (статистические модели), позволяющую (позволяющие) получить ответ на исследовательский вопрос. При необходимости сформулируйте гипотезы.
+Обоснуйте применимость выбранной вами модели (выбранных вами моделей).
+Опишите полученные результаты. Дайте их статистическую и содержательную интерпрепретацию.
+Оцените качество полученных результатов.
+Визуализируйте полученные результаты.
+Предложите альтернативные способы ответа на исследовательский вопрос / проверки выдвинутой гипотезы (выдвинутых гипотез).
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
