@@ -61,37 +61,62 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>10 баллов</p>
-<p>На предложенных данных выполните следующие задания и ответьте на вопросы: Протестируйте гипотезу о равенстве средних в двух подвыборках на уровне значимости α = 0.001. Дайте статистическую интерпретацию полученных результатов: значимы ли различия? что можно сказать о размере эффекта? Предложите содержательную интерпретацию полученных результатов. Постройте 99% доверительный интервал для разности средних значений. Визуализируйте полученные результаты. Проведите аналогичный анализ с использование метода bootstrap. Сравните результаты двух анализов.</p>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">1</h2>
+<section id="часть-1" class="level2">
+<h2 class="anchored" data-anchor-id="часть-1">Часть 1</h2>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section">1</h3>
+<p>Загрузите данные о</p>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">2</h2>
+<section id="section-1" class="level3">
+<h3 class="anchored" data-anchor-id="section-1">2</h3>
 </section>
-<section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2">3</h2>
+<section id="section-2" class="level3">
+<h3 class="anchored" data-anchor-id="section-2">3</h3>
 </section>
-<section id="section-3" class="level2">
-<h2 class="anchored" data-anchor-id="section-3">4</h2>
+<section id="section-3" class="level3">
+<h3 class="anchored" data-anchor-id="section-3">4</h3>
 </section>
-<section id="section-4" class="level2">
-<h2 class="anchored" data-anchor-id="section-4">5</h2>
 </section>
-<section id="section-5" class="level2">
-<h2 class="anchored" data-anchor-id="section-5">6</h2>
+<section id="часть-2" class="level2">
+<h2 class="anchored" data-anchor-id="часть-2">Часть 2</h2>
+<p>Теперь поработает с <a href="">экспериментальными данными</a>.</p>
+<section id="описание-данных" class="level3">
+<h3 class="anchored" data-anchor-id="описание-данных">Описание данных</h3>
+<p>В эксперименте испытуемым необходимо было искать целевые иконки среди дистракторов. Целевая иконка задавалась предъявлением изображения иконки перед экспериментальной пробой. Фиксиловались время реакции (<code>time</code>) и отчет испытуемого о нахождении целеовго стимула (<code>key</code>). Если испытуемый нашел целевую иконку в предъявленом наборе, он нажимал стрелку вправо (<code>right</code>), если не нашел — влево (<code>left</code>). Варьировались следующие параметры: количество стимулов в пробе — <code>3</code>, <code>6</code>, <code>9</code>, тип иконки — плоская (<code>flat</code>) и с градиентом (<code>gradient</code>) и наличие тени у иконки (<code>shadow</code>). В эксперименте были обычные пробы, где присутствовал целевой стимул (<code>present</code>) и пробы-ловушки, в которых целевой стимул отсутствовал (<code>absent</code>).</p>
 </section>
-<section id="section-6" class="level2">
-<h2 class="anchored" data-anchor-id="section-6">7</h2>
+<section id="section-4" class="level3">
+<h3 class="anchored" data-anchor-id="section-4">5</h3>
+<p><strong>Загрузите данные поведенческого эксперимента на зрительный поиск. Проверьте их структуру. Отберите только корректные пробы.</strong></p>
+<p>Корректными считаются пробы, в которых был целевой стимул (<code>present</code>) и испытуемый отчитался о нахождении целевого стимула (<code>right</code>), и пробы, в которых целевого стимула не было (<code>absent</code>) и испытуемый отчитался о его отсутствии (<code>left</code>).</p>
 </section>
-<section id="section-7" class="level2">
-<h2 class="anchored" data-anchor-id="section-7">8</h2>
+<section id="section-5" class="level3">
+<h3 class="anchored" data-anchor-id="section-5">6</h3>
+<p><strong>Удалите из данных выбросы.</strong></p>
+<p>Считайте выбросами те пробы, в которых время реакции (<code>time</code>) отклоняется от среднего значения (среднего арифметического), более чем на 2.5 стандартных отклонения. Учтите при определении выброса группировку данных по экспериментальным условиям — количеству стимулов в пробе, типу стимула и наличию тени, а также по идентификатору испытуемого (<code>id</code>).</p>
+<details>
+<summary>
+Может пригодиться код
+</summary>
+<pre><code>is_outlier &lt;- function(x) {!(x &lt; mean(x) + 2.5 * sd(x) &amp; x &gt; mean(x) - 2.5 * sd(x))}</code></pre>
+</details>
 </section>
-<section id="section-8" class="level2">
-<h2 class="anchored" data-anchor-id="section-8">9</h2>
+<section id="section-6" class="level3">
+<h3 class="anchored" data-anchor-id="section-6">7</h3>
+<p><strong>Протестируйте гипотезу о том, что фактор тени ускоряет скорость поиска целевой иконки.</strong></p>
+<p>Учтите, что данные не аггрегированы и каждое наблюдение — это отдельная экспериментальная проба.</p>
+<p><strong>Дайте статистическую интерпретацию полученных результатов: значимы ли различия? что можно сказать о размере эффекта?</strong></p>
+<details>
+<summary>
+А?
+</summary>
+<pre><code>?t.test</code></pre>
+<a href="https://stepik.org/lesson/11504/step/1?unit=2527">Stepik</a>
+</details>
 </section>
-<section id="section-9" class="level2">
-<h2 class="anchored" data-anchor-id="section-9">10</h2>
+<section id="section-7" class="level3">
+<h3 class="anchored" data-anchor-id="section-7">8</h3>
+<p><strong>Визуализируйте полученные результаты.</strong></p>
+</section>
 </section>
 
 </main>
