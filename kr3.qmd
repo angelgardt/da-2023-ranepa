@@ -10,7 +10,7 @@ theme: materia
 knitr::opts_chunk$set(include = FALSE)
 ```
 
-Максимальное количество баллов --- 40 (+2 дополнительных за задание 10.1)
+Максимальное количество баллов --- 20 (+2 дополнительных за задание 10.1)
 
 Сегодня мы работаем с [датасетом про ноутбуки](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/laptop_price.csv), который содержит следующие переменные:
 
