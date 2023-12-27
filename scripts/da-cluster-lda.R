@@ -12,6 +12,7 @@ theme_update(legend.position = 'bottom')
 cpi <- readxl::read_xlsx("data/cpi.xlsx")
 str(cpi)
 summary(cpi)
+cpi$group %>% unique()
 
 cpi %>% 
     summarise(mean_prod = mean(prodazhi),
@@ -32,6 +33,7 @@ model_lda
 
 lda_pred <- predict(model_lda, cpi)
 lda_pred
+
 ldahist(lda_pred$x[, 1], g = cpi$group)
 ldahist(lda_pred$x[, 2], g = cpi$group)
 
@@ -40,7 +42,17 @@ partimat(group ~ Cs + Sp + Do + Sy, data = cpi, method = "lda")
 
 confmat <- table(pred = lda_pred$class, real = cpi$group)
 confmat
+
 sum(diag(confmat)) / sum(confmat)
+
+
+model2_lda <- lda(group ~ ., cpi %>% select(-prodazhi))
+model2_lda
+
+lda_pred2 <- predict(model2_lda, cpi)
+lda_pred2
+
+
 
 
 ## CLUSTER
@@ -56,7 +68,7 @@ plot(hc_complete)
 plot(hc_average)
 plot(hc_single)
 
-cutree(hc_complete, 6)
+cutree(hc_complete, 5)
 
 cstats.table <- function(dist, tree, k) {
     library(fpc)
@@ -118,8 +130,7 @@ ggplot(data = data.frame(t(clust.stats)),
        aes(x = cluster.number, y = within.cluster.ss)) +
     geom_point() +
     geom_line() +
-    labs(x = "Num. of clusters", y = "Within clusters sum of squares (WSS)") +
-    theme(plot.title = element_text(hjust = 0.5))
+    labs(x = "Num. of clusters", y = "Within clusters sum of squares (WSS)")
 
 
 cpi %>% 
@@ -135,7 +146,7 @@ cpi %>%
     geom_point()
 
 cpi %>% 
-    ggplot(aes(prodazhi, as_factor(cutree(hc.complete, 6)),
+    ggplot(aes(prodazhi, as_factor(cutree(hc_complete, 6)),
                color = as_factor(group))) +
     geom_point()
 
