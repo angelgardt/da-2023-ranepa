@@ -1,12 +1,11 @@
+# install.packages("MASS")
 library(MASS)
+# install.packages("klaR")
 library(klaR)
 library(tidyverse)
 theme_set(theme_bw())
 theme_update(legend.position = 'bottom')
-# install.packages("MASS")
-# install.packages("devtools")
-# devtools::install_github("fawda123/ggord")
-# install.packages("klaR")
+
 
 ## LDA
 
@@ -36,7 +35,6 @@ lda_pred
 ldahist(lda_pred$x[, 1], g = cpi$group)
 ldahist(lda_pred$x[, 2], g = cpi$group)
 
-# ggord::ggord(model_lda, cpi$group)
 
 partimat(group ~ Cs + Sp + Do + Sy, data = cpi, method = "lda")
 
