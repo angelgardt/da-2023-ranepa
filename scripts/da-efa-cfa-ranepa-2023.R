@@ -20,10 +20,10 @@ fa$correlation
 fa$scores
 fa$call
 
-pizza %>% 
-    bind_cols(
-        as_tibble(fa$scores)
-    ) %>% write_csv("data/pizza_factor_scores.csv")
+# pizza %>% 
+#     bind_cols(
+#         as_tibble(fa$scores)
+#     ) %>% write_csv("data/pizza_factor_scores.csv")
 
 fa$scores %>% 
   as_tibble() %>% 
