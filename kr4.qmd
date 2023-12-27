@@ -12,21 +12,17 @@ knitr::opts_chunk$set(include = FALSE)
 
 Максимальное количество баллов --- 20 (+2 дополнительных за задание 10.1)
 
-Сегодня мы работаем с [датасетом про ноутбуки](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/laptop_price.csv), который содержит следующие переменные:
+Сегодня мы работаем с [датасетом по Большой пятёрке](https://media.githubusercontent.com/media/angelgardt/da-2023-ranepa/master/data/big_five_bffm.csv).
 
-* `Company` --- компания-производитель компьютера
-* `Product` --- бренд и модель
-* `TypeName` --- тип ноутбука (Notebook, Ultrabook, Gaming, etc.)
-* `Inches` --- размер экрана
-* `ScreenResolution` --- разрешение экрана
-* `Cpu` --- характеристики процессора
-* `Ram` --- размер оперативной памяти
-* `Memory` --- память жёсткого диска
-* `GPU` --- характеристики графического процессора
-* `OpSys` --- операционная система
-* `Weight` --- вес компьютера
-* `Price_euros` --- цена в Евро
+На измерение каждого фактора в опроснике отведено по десять утверждений:
 
+EXT1–EXT10 — extraversion
+EST1–EST10 — neuroticism (emotional stability)
+AGR1–AGR10 — agreeableness
+CSN1–CSN10 — conscientiousness
+OPN1–OPN10 — openness
+
+Подробное описание датасета представлено [в этом файле](). Факторную структуру опросника можно изучить [здесь](https://ipip.ori.org/newBigFive5broadKey.htm). Датасет содержит 1 015 342 наблюдения
 
 ```{r, include=FALSE}
 library(tidyverse)
