@@ -22,7 +22,19 @@ knitr::opts_chunk$set(include = FALSE)
 * `CSN1`--`CSN10` --- conscientiousness
 * `OPN1`--`OPN10` --- openness
 
+С этими переменными мы и будем работать.
+
 Подробное описание датасета представлено [в этом файле](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/big_five_bffm_codebook.txt). Факторную структуру опросника можно изучить [здесь](https://ipip.ori.org/newBigFive5broadKey.htm).
+
+
+```{r}
+# bf <- read_tsv("https://media.githubusercontent.com/media/angelgardt/da-2023-ranepa/master/data/big_five_bffm.csv")
+# 
+# set.seed(824)
+# bf %>% 
+#     slice(sample(1:nrow(bf), 30086)) %>% 
+#     write_tsv("data/bffm.csv")
+```
 
 ::: {.callout-important}
 
@@ -33,8 +45,8 @@ knitr::opts_chunk$set(include = FALSE)
 :::
 
 ```{r, include=FALSE}
-library(tidyverse)
-theme_set(theme_bw())
+# library(tidyverse)
+# theme_set(theme_bw())
 ```
 
 
@@ -53,10 +65,14 @@ theme_set(theme_bw())
 # 
 # str(bf)
 # 
-# bf %>% 
-#     select(1:50) %>% 
-#     mutate_all(as.numeric) %>% 
+# bf %>%
+#     select(1:50) %>%
+#     mutate_all(as.numeric) %>%
 #     drop_na() -> bigfive
+# rm(bf)
+# 
+# bigfive %>%
+#     mutate(id = 1:nrow(bigfive)) -> bigfive
 # 
 # nrow(bigfive)
 ```
@@ -66,7 +82,7 @@ theme_set(theme_bw())
 Проведите разведочный анализ данных. Выясните, какие есть взаимосвязи между переменными опросника. Какие особенности есть в данных? Что с этим нужно сделать?
 
 ```{r, include=FALSE}
-# cor(bigfive) %>% ggcorrplot::ggcorrplot()
+# cor(bigfive %>% select(-id)) %>% ggcorrplot::ggcorrplot()
 ```
 
 ## 3
@@ -75,27 +91,50 @@ theme_set(theme_bw())
 
 <details>
 <summary>*Подсказка*</summary>
-[Матрица направлений вопросов]()
+[Матрица направлений вопросов](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/direction_matrix_bffm.csv)
 </details>
 
 ```{r}
-
+# dirmat <- read_tsv("https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/direction_matrix_bffm.csv")
+# 
+# dirmat %>%
+#     pivot_longer(-item_in_scale,
+#                  values_to = "direction") %>%
+#     unite(item, name, item_in_scale, sep="") %>%
+#     full_join(
+#         bigfive %>%
+#             pivot_longer(cols = -id,
+#                          names_to = "item",
+#                          values_to = "score"),
+#         join_by(item)
+#     ) %>%
+#     mutate(score = ifelse(direction == -1, 6 - score, score)) %>%
+#     select(-direction) %>%
+#     pivot_wider(names_from = "item",
+#                 values_from = "score") -> bffm
 ```
 
+```{r}
+# cor(bffm %>% select(-id)) %>% ggcorrplot::ggcorrplot()
+```
 
 
 
 ## 4
 
-Проверьте статистическую значимость модели `model1` в целом и статистистическую значимость фиксированных предикторов. Проинтерпретируйте полученные результаты.
-
-<details>
-<summary>*Пояснение*</summary>
-Обычно нас интересует прежде всего интересует фиксированная часть модели, поэтому сосредоточтесь на ней.
-</details>
+Постройте модель конфирматорного факторного анализа для проверки классической структуры модели Большая пятерка.
 
 ```{r}
-
+# library(lavaan)
+# model <- "
+# EXT =~ EXT1 + EXT2 + EXT3 + EXT4 + EXT5 + EXT6 + EXT7 + EXT8 + EXT9 + EXT10
+# EST =~ EST1 + EST2 + EST3 + EST4 + EST5 + EST6 + EST7 + EST8 + EST9 + EST10
+# AGR =~ AGR1 + AGR2 + AGR3 + AGR4 + AGR5 + AGR6 + AGR7 + AGR8 + AGR9 + AGR10
+# CSN =~ CSN1 + CSN2 + CSN3 + CSN4 + CSN5 + CSN6 + CSN7 + CSN8 + CSN9+ CSN10
+# OPN =~ OPN1 + OPN2 + OPN3 + OPN4 + OPN5 + OPN6 + OPN7 + OPN8 + OPN9 + OPN10
+# "
+# 
+# cfa_model <- cfa(model, bffm)
 ```
 
 
@@ -103,59 +142,54 @@ theme_set(theme_bw())
 
 ## 5
 
-Включите в модель в качестве *количественного* фиксированного предиктора размер оперативной памяти ноутбука (`Ram`) --- создайте новую модель `model2`.
+Оцените качество модели. Хорошо ли данные согласуются с моделью?
 
 ```{r}
-
+# fitmeasures(cfa_model, c("chisq", "gfi", "agfi","cfi", "tli", "srmr", "rmsea"))
 ```
 
 
 ## 6
 
-Сравните две имеющиеся модели --- с одним (`model1`) и двумя (`model2`) фиксированными предикторами. Проинтерпретируйте результаты.
+Проинтерпретируйте результаты конфирматорного факторного анализа. Изучите факторные нагрузки, ковариации и остатки модели.
 
 ```{r}
-
+# standardizedsolution(cfa_model)
 ```
 
 
 ## 7
 
-Протестируйте статистическую значимость предикторов модели с двумя фиксированными предикторами (`model2`). Проинтерпретируйте результаты. Сравните с результатами тестирования значимости предикторов модели с одним фиксированным предиктором. 
-
-Почему так могло произойти?
-
-```{r}
-
-```
+Виузализируйте получившуюся модель.
 
 
 ## 8
 
-Усложните случайную часть модели. Возьмите за основу имеющуюся модель с двумя фиксированными предикторами и добавьте ещё один случайный интерсепт. Группирующую переменную выберите самостоятельно. Обоснуйте выбор случайного фактора. Создайте модель `model3`.
-
-Протестируйте статистическую значимость фиксированных предикторов. Проинтерпретируйте результаты. Если есть что-либо необычное в результатах тестирования, дайте комментарий, почему это могло произойти.
+Рассчитайте сумму баллов по шкалам опросника для каждого респондента.
 
 ```{r}
-
+bffm %>% 
+    pivot_longer(-id,
+                 names_to = "item",
+                 values_to = "score") %>% 
+    mutate(scale = str_sub(item, 1, 3)) %>% 
+    summarise(score = sum(score),
+              .by = c(id, scale)) %>% 
+    pivot_wider(names_from = scale,
+                values_from = score) -> bffm_scores
 ```
 
 ## 9
 
-Сравните модели с двумя фиксированными предикторами друг с другом (`model2` и `model3`). Проинтерпретируйте результаты.
-
-<details>
-<summary>*Подсказка*</summary>
-Обратите внимание на способ подбора модели.
-</details>
+Кластеризуйте респондентов по баллам шкал опросника с помощью иерархической кластеризации.
 
 ```{r}
-
+d <- dist(bffm_scores %>% select(-id))
 ```
 
 ## 10
 
-Проведите дагностику модели `model3`. Достаточно будет графической диагностики: гистограммы распределения остатков модели и диагностического графика зависимости остатков модели от предсказанных значений. Сделайте заключение о качестве модели на основе результатов диагностики.
+Определите оптимальное количество кластеров в иерархической кластеризации.
 
 ```{r}
 
@@ -165,12 +199,7 @@ theme_set(theme_bw())
 
 ## 10.1
 
-Постройте модель обычной линейной регрессии с такой же структурой предикторов, как в `model3`. Сравните предсказательную силу модели обычной линейной регрессии и модели с одним случайным интерсептом. Какая модель даёт более точные предсказания?
-
-<details>
-<summary>*Пояснение*</summary>
-Достаточно сравнить суммы квадратов ошибок двух моделей.
-</details>
+Проведите аналогичную кластеризацию с помощью метода k-средних. Сравните результаты двух кластеризаций друг с другом.
 
 ```{r}
 
