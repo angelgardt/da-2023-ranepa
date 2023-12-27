@@ -16,13 +16,21 @@ knitr::opts_chunk$set(include = FALSE)
 
 На измерение каждого фактора в опроснике отведено по десять утверждений:
 
-EXT1–EXT10 — extraversion
-EST1–EST10 — neuroticism (emotional stability)
-AGR1–AGR10 — agreeableness
-CSN1–CSN10 — conscientiousness
-OPN1–OPN10 — openness
+* `EXT1`--`EXT10` --- extraversion
+* `EST1`--`EST10` --- neuroticism (emotional stability)
+* `AGR1`--`AGR10` --- agreeableness
+* `CSN1`--`CSN10` --- conscientiousness
+* `OPN1`--`OPN10` --- openness
 
-Подробное описание датасета представлено [в этом файле](). Факторную структуру опросника можно изучить [здесь](https://ipip.ori.org/newBigFive5broadKey.htm). Датасет содержит 1 015 342 наблюдения
+Подробное описание датасета представлено [в этом файле](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/big_five_bffm_codebook.txt). Факторную структуру опросника можно изучить [здесь](https://ipip.ori.org/newBigFive5broadKey.htm).
+
+::: {.callout-important}
+
+Датасет содержит 1 015 342 наблюдения.
+
+Это почти 400 Мб данных. Это много. Если ваша машина не справляется с таким объемом, отберите случайную подвыборку из 10 000 / 100 000 / 300 000 наблюдений (в зависимости от мощности машины), и выполняйте задания на ней.
+
+:::
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -32,36 +40,46 @@ theme_set(theme_bw())
 
 ## 1
 
-Загрузите [датасет](https://raw.githubusercontent.com/angelgardt/hseuxlab-wlm2021/master/data/laptop_price.csv). Проверьте типы переменных. Если есть такие переменные, которые по своему содержанию должны быть другого типа, приведите их к нужному типу. Сделайте необходимые преобразования с переменными, если они потребуются.
+Загрузите [датасет](https://media.githubusercontent.com/media/angelgardt/da-2023-ranepa/master/data/big_five_bffm.csv). Проверьте типы переменных. Если есть такие переменные, которые по своему содержанию должны быть другого типа, приведите их к нужному типу. Сделайте необходимые преобразования с переменными, если они потребуются. Если в данных есть пропущенные значения, удалите их из данных.
 
 <details>
 <summary>*Подсказка*</summary>
-Обратите внимание, как записаны переменные `Ram` и `Weight`. Возможно, понадобится функция `str_remove()`.
+При загрузке файла обратите внимание на разделитель колонок.
 </details>
 
-```{r}
-library(tidyverse)
-laptops <- read_csv("https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/laptop_price.csv")
-
-laptops %>% 
-    mutate(Ram = Ram %>% str_remove("GB") %>% as.numeric(),
-           Weight = Weight %>% str_remove("kg") %>% as.numeric()) -> laptops
+```{r, include=FALSE}
+# library(tidyverse)
+# bf <- read_tsv("https://media.githubusercontent.com/media/angelgardt/da-2023-ranepa/master/data/big_five_bffm.csv")
+# 
+# str(bf)
+# 
+# bf %>% 
+#     select(1:50) %>% 
+#     mutate_all(as.numeric) %>% 
+#     drop_na() -> bigfive
+# 
+# nrow(bigfive)
 ```
 
 ## 2
 
-Мы хотим узнать, от каких технических характеристик зависит цена ноутбука. Исследуйте взаимосвязи между ценой и характеристиками ноутбуков. Предположите, какие из характеристик могут быть включены в регрессионную модель в качестве предикторов цены.
+Проведите разведочный анализ данных. Выясните, какие есть взаимосвязи между переменными опросника. Какие особенности есть в данных? Что с этим нужно сделать?
 
+```{r, include=FALSE}
+# cor(bigfive) %>% ggcorrplot::ggcorrplot()
+```
 
 ## 3
 
-Постройте линейную модель `model1` со случайным интерсептом, которая позволит ответить на вопрос, как зависит цена компьютера от размера экрана? В качестве случайного эффекта включите в модель группировку по компании-производителю.
+Если необходимы какие-либо преобразования данных перед проведением конфирматорного факторного анализа, выполните их.
+
+<details>
+<summary>*Подсказка*</summary>
+[Матрица направлений вопросов]()
+</details>
 
 ```{r}
-library(lme4)
-library(lmerTest)
 
-model1 <- lmer(Price_euros ~ Inches + (1|Company), laptops)
 ```
 
 
@@ -77,9 +95,7 @@ model1 <- lmer(Price_euros ~ Inches + (1|Company), laptops)
 </details>
 
 ```{r}
-model0 <- lmer(Price_euros ~ 1 + (1|Company), laptops)
-anova(model0, model1, test = "Chi")
-summary(model1)
+
 ```
 
 
@@ -90,8 +106,7 @@ summary(model1)
 Включите в модель в качестве *количественного* фиксированного предиктора размер оперативной памяти ноутбука (`Ram`) --- создайте новую модель `model2`.
 
 ```{r}
-laptops$Ram %>% unique()
-model2 <- lmer(Price_euros ~ Inches + Ram + (1|Company), laptops)
+
 ```
 
 
@@ -100,7 +115,7 @@ model2 <- lmer(Price_euros ~ Inches + Ram + (1|Company), laptops)
 Сравните две имеющиеся модели --- с одним (`model1`) и двумя (`model2`) фиксированными предикторами. Проинтерпретируйте результаты.
 
 ```{r}
-anova(model1, model2, test = "Chi")
+
 ```
 
 
@@ -111,7 +126,7 @@ anova(model1, model2, test = "Chi")
 Почему так могло произойти?
 
 ```{r}
-summary(model2)
+
 ```
 
 
@@ -122,9 +137,7 @@ summary(model2)
 Протестируйте статистическую значимость фиксированных предикторов. Проинтерпретируйте результаты. Если есть что-либо необычное в результатах тестирования, дайте комментарий, почему это могло произойти.
 
 ```{r}
-laptops$TypeName %>% unique()
-model3 <- lmer(Price_euros ~ Inches + Ram + (1|Company) + (1|TypeName), laptops)
-summary(model3)
+
 ```
 
 ## 9
@@ -137,7 +150,7 @@ summary(model3)
 </details>
 
 ```{r}
-anova(model2, model3, test = "Chi", refit = FALSE)
+
 ```
 
 ## 10
@@ -145,8 +158,7 @@ anova(model2, model3, test = "Chi", refit = FALSE)
 Проведите дагностику модели `model3`. Достаточно будет графической диагностики: гистограммы распределения остатков модели и диагностического графика зависимости остатков модели от предсказанных значений. Сделайте заключение о качестве модели на основе результатов диагностики.
 
 ```{r}
-hist(residuals(model3))
-plot(fitted.values(model3), residuals(model3))
+
 ```
 
 
@@ -161,9 +173,7 @@ plot(fitted.values(model3), residuals(model3))
 </details>
 
 ```{r}
-model3lm <- lm(Price_euros ~ Inches + Ram, laptops)
-sum((laptops$Price_euros - fitted.values(model3))^2)
-sum((laptops$Price_euros - fitted.values(model3lm))^2)
+
 ```
 
 
