@@ -12,7 +12,7 @@ knitr::opts_chunk$set(include = FALSE, eval = FALSE)
 
 Максимальное количество баллов --- 20 (+2 дополнительных за задание 10.1)
 
-Сегодня мы работаем с [датасетом по Большой пятёрке](https://media.githubusercontent.com/media/angelgardt/da-2023-ranepa/master/data/big_five_bffm.csv).
+Сегодня мы работаем с [датасетом по Большой пятёрке](https://raw.githubusercontent.com/angelgardt/da-2023-ranepa/master/data/bffm.csv).
 
 На измерение каждого фактора в опроснике отведено по десять утверждений:
 
